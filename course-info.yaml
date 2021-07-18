@@ -1,0 +1,10 @@
+type: hyperskill
+title: Generating Randomness
+language: English
+summary: Everyone knows that people are bad at generating random things. In this project,
+  we will check this assumption using a small program that will predict "random" user
+  actions. We'll see if you can beat it!<br/><br/>Learn more at <a href="https://hyperskill.org">https://hyperskill.org/projects/156</a>
+programming_language: Python
+content:
+- Generating Randomness
+mode: Study

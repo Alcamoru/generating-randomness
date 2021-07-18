@@ -1,0 +1,43 @@
+<h2>Description</h2>
+
+<p>Now it's time to reveal the secret of our magical predictive system. We will create a "profile" of the user that will contain information about patterns found in their "random" clicks. To do this, we will count how many times a certain character (0 or 1) follows a specific triad of numbers (for example, 000 or 011). For example, in the string "00010000", the triad "000" is followed once by a "0" and once by "1".</p>
+
+<p>In the next stage, we will create a prediction algorithm based on this information.</p>
+
+<h2>Objectives</h2>
+
+<p>In this stage, your program should:</p>
+
+<ol>
+	<li>Read the user input the same way it did in the previous stage.</li>
+	<li>Output the result in the following format: <code class="java">triad: counts of 0, counts of 1</code>, for example, <code class="java">000: 57,12</code>. The result for each triad should be printed on a new line. The triads must be ordered in ascending order of their decimal representation (for example, 110 in binary = 1*4+1*2+0*1 = 6 in decimal).</li>
+</ol>
+
+<h2>Example</h2>
+
+<p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+
+<pre><code class="language-no-highlight">Print a random string containing 0 or 1:
+
+&gt; 01010010010001010100100101001001
+The current data length is 32, 68 symbols left
+Print a random string containing 0 or 1:
+
+&gt; 10100011001010101010111101001001011010
+The current data length is 70, 30 symbols left
+Print a random string containing 0 or 1:
+
+&gt; 0101101010100110101010101010001110011
+
+Final data string:
+01010010010001010100100101001001101000110010101010101111010010010110100101101010100110101010101010001110011
+
+000: 0,3
+001: 10,5
+010: 13,18
+011: 5,2
+100: 3,12
+101: 20,3
+110: 2,5
+111: 2,1
+</code></pre>

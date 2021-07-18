@@ -1,0 +1,145 @@
+type: edu
+files:
+- name: predictor/predictor.py
+  visible: true
+  text: |
+    print('Hello, World!')
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: "from hstest.stage_test import *\nfrom hstest.test_case import TestCase\n\
+    import numpy as np\n\n\ndef remember_data(data, count_dict):\n    for i in range(len(data)\
+    \ - COMBO_LENGTH):\n        comb = data[i:i + COMBO_LENGTH]\n        next_input\
+    \ = int(data[i + COMBO_LENGTH])\n        count_dict[comb][next_input] += 1\n\n\
+    \    return count_dict\n\n\ndef make_prediction(data, count_dict):\n    pred =\
+    \ str()\n    for i in range(COMBO_LENGTH):\n        res = str(np.random.choice([0,\
+    \ 1]))\n        pred += res\n\n    for i in range(len(data) - COMBO_LENGTH):\n\
+    \        comb = data[i:i + COMBO_LENGTH]\n        try:\n            if count_dict[comb][0]\
+    \ > count_dict[comb][1]:\n                probas = [1, 0]\n            elif count_dict[comb][0]\
+    \ < count_dict[comb][1]:\n                probas = [0, 1]\n            else:\n\
+    \                probas = [0.5, 0.5]\n\n            \n\n        except Exception:\n\
+    \            probas = [0.5, 0.5]\n\n        res = str(np.random.choice([0, 1],\
+    \ p=probas))\n        pred += res\n\n    return pred\n\n\ndef estimate_prediction_accuracy(pred,\
+    \ data):\n    pr = [bool(int(elem)) for elem in pred]\n    gt = [bool(int(elem))\
+    \ for elem in data]\n    pred_correct = ~np.bitwise_xor(pr, gt)\n    return sum(pred_correct.astype(int))\n\
+    \n\nCheckResult.correct = lambda: CheckResult(True, '')\nCheckResult.wrong = lambda\
+    \ feedback: CheckResult(False, feedback)\n\nCOMBO_LENGTH = 3\nMIN_DATA_STR_LEN\
+    \ = 100\nINSTRUCTION = 'Print a random string containing 0 or 1'\nGAME_END = 'Game\
+    \ over!'\n\nkeys = []\nfor i in range(2 ** COMBO_LENGTH):\n    keys.append(str((bin(i)[2:].zfill(3))))\n\
+    \nvalues = [[0, 0] for _ in range(2 ** COMBO_LENGTH)]\ncount_dict = dict(zip(keys,\
+    \ values))\ninp = '1010101101010101010011100101001010100101010000101000101010000100101011010001001000101011101000101010010100101'\n\
+    count_dict = remember_data(inp, count_dict)\n\nappr_pred_set = set()\nfor i in\
+    \ range(1000):\n    pred = make_prediction(inp, count_dict)\n    appr_pred_set\
+    \ = appr_pred_set | set([pred[COMBO_LENGTH:]])\n\nappr_pred_output_dict = {}\n\
+    appr_pred_count_dict = {}\nfor appr_pred in appr_pred_set:\n    correct_guesses\
+    \ = estimate_prediction_accuracy(appr_pred, inp[COMBO_LENGTH:])\n    ideal_output\
+    \ = 'Computer guessed right {} out of {} symbols ({:03.2f} %)'.format(correct_guesses,\n\
+    \                                                                            \
+    \            len(inp) - COMBO_LENGTH,\n                                      \
+    \                                                  100 * correct_guesses / (len(\n\
+    \                                                                            \
+    \                inp) - COMBO_LENGTH))\n    appr_pred_output_dict[appr_pred] =\
+    \ ideal_output\n    appr_pred_count_dict[appr_pred] = correct_guesses\n\n\nclass\
+    \ GenRandTest(StageTest):\n    def generate(self) -> List[TestCase]:\n       \
+    \ return [TestCase(stdin=[\"1010101101010\",\n                               \
+    \ \"1010100111001010010101001010100001010001\",\n                            \
+    \    '01010000100101011010001001000101011101000101010010100101',\n           \
+    \                     inp,\n                                'enough'],\n     \
+    \                    attach=[109, appr_pred_output_dict, appr_pred_count_dict,\
+    \ inp, 1]),\n\n                TestCase(stdin=[\"1010101101010_some_wrong_symbols\"\
+    ,\n                                \"1010100111001010010101001010100001010001_some_more_wrong_symbols\"\
+    ,\n                                '01010000100101011010001001000101011101000101010010100101',\n\
+    \                                'some_irrelevant_symbols_in_the_game',\n    \
+    \                            inp,\n                                'enough'],\n\
+    \                         attach=[109, appr_pred_output_dict, appr_pred_count_dict,\
+    \ inp, 1]),\n\n                TestCase(stdin=[\"1010101101010\",\n          \
+    \                      \"1010100111001010010101001010100001010001\",\n       \
+    \                         '01010000100101011010001001000101011101000101010010100101',\n\
+    \                                inp,\n                                inp,\n\
+    \                                'enough'],\n                         attach=[109,\
+    \ appr_pred_output_dict, appr_pred_count_dict, inp, 2])\n                ]\n\n\
+    \    def check(self, output: str, attach) -> CheckResult:\n        correct_len,\
+    \ appr_pred_output_dict, appr_pred_count_dict, inp, game_iterations = attach\n\
+    \        strings = [s for s in output.split('\\n') if s != '']\n\n        if not\
+    \ strings:\n            return CheckResult.wrong(\"The output seems to be empty.\"\
+    )\n        \n        if len(strings) < 3:\n            return CheckResult.wrong(\"\
+    Your program is supposed to output at least 3 lines.\\n\"\n                  \
+    \                   \"However, there are less than 3 lines.\")\n\n        instructions\
+    \ = strings[2]\n        data_string = inp\n\n        if INSTRUCTION.lower() not\
+    \ in instructions.lower():\n            return CheckResult.wrong('Please give\
+    \ instructions to user in the form \"{}\"\\n'\n                              \
+    \       'The instruction should be given in the third line of the program.'.format(INSTRUCTION))\n\
+    \n        if len(data_string) < MIN_DATA_STR_LEN:\n            return CheckResult.wrong('Data\
+    \ string \\\"{}\\\" is too short, it should have length >={}'.format(data_string,\n\
+    \                                                                            \
+    \                              MIN_DATA_STR_LEN))\n        if len(data_string)\
+    \ != correct_len:\n            return CheckResult.wrong(\n                \"The\
+    \ string \\\"{}\\\" of your output is supposed to contain the final data string.\
+    \ \\n\"\n                \"However, it contains wrong number of symbols\".format(data_string)\n\
+    \            )\n\n        game_finish = strings[-1]\n        final_instruction\
+    \ = strings[-2]\n\n        if 'game' not in game_finish.lower() or 'over' not\
+    \ in game_finish.lower():\n            return CheckResult.wrong(\n           \
+    \     \"The final string \\\"{}\\\" of your output is supposed to contain game\
+    \ ending indicator in the form {}\".format(\n                    game_finish,\
+    \ GAME_END)\n            )\n\n        if INSTRUCTION.lower() not in final_instruction.lower():\n\
+    \            return CheckResult.wrong(\n                \"The pre-final string\
+    \ \\\"{}\\\" of your output is supposed to contain instructions in the form {}\"\
+    .format(\n                    final_instruction, INSTRUCTION)\n            )\n\
+    \n        cap = 1000\n        for iter in range(game_iterations):\n          \
+    \  \n            start_ind = -2 - game_iterations * 5\n            prediction_declaration\
+    \ = strings[start_ind + iter * 5 + 1]\n            prediction = strings[start_ind\
+    \ + iter * 5 + 2]\n            result = strings[start_ind + iter * 5 + 3]\n  \
+    \          capital_info = strings[start_ind + iter * 5 + 4]\n            capital_info\
+    \ = capital_info.strip('.')\n            capital_info = capital_info.strip(' ')\n\
+    \            \n            if '(' not in result or ')' not in result:\n      \
+    \          return CheckResult.wrong(\"The last line of your output is supposed\
+    \ \"\n                                         \"to contain the percentage of\
+    \ correct guesses.\\n\"\n                                         \"This number\
+    \ should be put in parentheses.\")\n            percentage = result[result.index('(')\
+    \ + 1:result.index(')')].replace('%', '').replace(' ', '')\n            if '.'\
+    \ in percentage:\n                percentage = percentage[:percentage.index('.')]\n\
+    \n            if 'prediction' not in prediction_declaration.lower():\n       \
+    \         return CheckResult.wrong(\"Please use the word \\\"prediction\\\" in\
+    \ a line before the predictor output\")\n\n            if len(prediction) != correct_len:\n\
+    \                return CheckResult.wrong(\n                    \"The string \\\
+    \"{}\\\" of your output is supposed to contain the predictor output. \\n\"\n \
+    \                   \"However, it contains wrong number of symbols\".format(prediction)\n\
+    \                )\n\n            pred_success = prediction[COMBO_LENGTH:] in\
+    \ appr_pred_output_dict.keys()\n            if pred_success != True:\n       \
+    \         return CheckResult.wrong(\n                    \"The string \\\"{}\\\
+    \" of your output is supposed to contain the predictor output. \\n\"\n       \
+    \             \"However, it cannot be generated by prediction algorithm described\"\
+    .format(prediction)\n                )\n\n            if 'computer' not in result.lower()\
+    \ or 'guessed right' not in result.lower():\n                return CheckResult.wrong(\n\
+    \                    \"The string \\\"{}\\\" of your output is supposed to contain\
+    \ the prediction result. \\n\"\n                    \"However, it does not meet\
+    \ the requirements\".format(result)\n                )\n\n            ideal_result\
+    \ = appr_pred_output_dict[prediction[COMBO_LENGTH:]]\n            ideal_percentage\
+    \ = ideal_result[result.index('(') + 1:result.index(')')].replace('%', '').replace('\
+    \ ', '')\n            if '.' in ideal_percentage:\n                ideal_percentage\
+    \ = ideal_percentage[:ideal_percentage.index('.')]\n            if percentage\
+    \ != ideal_percentage:\n                return CheckResult.wrong(\n          \
+    \          \"The string \\\"{}\\\" of your output is supposed to contain the prediction\
+    \ result. \\n\"\n                    \"However, the prediction accuracy does not\
+    \ coincide with the expected one\".format(result)\n                )\n\n     \
+    \       if 'capital' not in capital_info or '$' not in capital_info:\n       \
+    \         return CheckResult.wrong(\n                    \"The string \\\"{}\\\
+    \" of your output is supposed to contain the information about user capital. \\\
+    n\"\n                    \"However, it does not meet the requirements\".format(capital_info)\n\
+    \                )\n\n            try:\n                output_cap = int(capital_info[capital_info.index('$')\
+    \ + 1:])\n                correct_guesses = appr_pred_count_dict[prediction[COMBO_LENGTH:]]\n\
+    \                cap += len(inp) - 2 * correct_guesses - COMBO_LENGTH\n\n    \
+    \            if output_cap != cap:\n                    return CheckResult.wrong(\n\
+    \                        \"The string \\\"{}\\\" of your output is supposed to\
+    \ contain the information about user capital. \\n\"\n                        \"\
+    However, its value does not coincide with the expected one\".format(capital_info)\n\
+    \                    )\n            except ValueError:\n                return\
+    \ CheckResult.wrong(\n                    \"The string \\\"{}\\\" of your output\
+    \ is supposed to contain the information about user capital. \\n\"\n         \
+    \           \"However, the symbols after the $ sign cannot be turned into an integer\
+    \ value\".format(capital_info)\n                )\n        return CheckResult.correct()\n\
+    \n\nif __name__ == '__main__':\n    GenRandTest('predictor.predictor').run_tests()\n"
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/156/stages/816/implement#comment
+status: Unchecked
+record: -1

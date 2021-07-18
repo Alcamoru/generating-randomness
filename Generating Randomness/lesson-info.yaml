@@ -1,0 +1,7 @@
+type: framework
+content:
+- Input processing
+- Analyzing user input
+- Predicting future input
+- ”Generate randomness” game
+current_task: 1
