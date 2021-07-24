@@ -10,3 +10,17 @@ while len(data) < 100:
 
 print("Final data string:")
 print(data)
+
+triads = {'000': [0, 0], '001': [0, 0], '010': [0, 0], '011': [0, 0],
+          '100': [0, 0], '101': [0, 0], '110': [0, 0], '111': [0, 0]}
+
+slice_data = []
+
+for i in range(len(data) - 3):
+    if data[i + 3] == '0':
+        triads[data[i: i + 3]][0] += 1
+    else:
+        triads[data[i: i + 3]][1] += 1
+
+for key, value in triads.items():
+    print(f'{key}: {value[0]},{value[1]}')

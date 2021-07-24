@@ -1,10 +1,5 @@
 type: edu
 files:
-- name: predictor/predictor.py
-  visible: true
-  text: |
-    print('Hello, World!')
-  learner_created: false
 - name: tests.py
   visible: false
   text: "from hstest.stage_test import *\nfrom hstest.test_case import TestCase\n\
@@ -95,6 +90,11 @@ files:
     \         \"However, the prediction accuracy does not coincide with the expected\
     \ one.\\n\".format(result)\n            )\n\n        return CheckResult.correct()\n\
     \n\nif __name__ == '__main__':\n    GenRandTest('predictor.predictor').run_tests()\n"
+  learner_created: false
+- name: predictor/predictor.py
+  visible: true
+  text: |
+    print('Hello, World!')
   learner_created: false
 feedback_link: https://hyperskill.org/projects/156/stages/815/implement#comment
 status: Unchecked

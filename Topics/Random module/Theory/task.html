@@ -1,0 +1,57 @@
+<h2>Random module</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Sometimes it happens that we lack data and need to make up a bunch of new examples rather quickly. Of course, you can spend some time writing those examples yourself, but it's not so efficient, right? It would make more sense to shift the responsibility to your computer, namely, the Python's built-in module <strong>random</strong>. In this module, a random search is used to generate elements and is performed using an algorithm whose starting point is a <strong>seed</strong>. Therefore, the results given aren't random at all and, technically, this module should have been called <strong>pseudo-random</strong>. Nevertheless, it may be useful for a large number of applications, such as modeling and simulation.</p> 
+  <h2 style="text-align: center;">Random method: first steps</h2> 
+  <p>First of all, we need to import the module:</p> 
+  <pre><code class="language-python">import random</code></pre> 
+  <p>After we've managed to do the previous task, it's possible to try the <code class="language-python">random.random()</code>function that will provide us with a pseudo-random number from 0 to 1:</p> 
+  <pre><code class="language-python">print(random.random())  # 0.5557276751294531</code></pre> 
+  <p>We can also control the pseudo-random behavior by specifying the seed manually, i.e. configure the new sequence of pseudo-random numbers using the <code class="language-python">random.seed(x)</code> function. You can set your own number or omit the optional argument x and consequently current system time would be used by default.</p> 
+  <pre><code class="language-python">random.seed()
+print(random.random())  # 0.956177930864557</code></pre> 
+  <p>Now try to set the <strong>x</strong> argument. Haven't you noticed the change of the result? If you choose <samp>5</samp>, you'll get <samp>0.6229016948897019</samp> as a result, if <samp>20</samp> – <samp>0.9056396761745207</samp>, etc. Thus, the seed controls the behavior of pseudo-random in Python and can be used with any other function of the random module.</p> 
+  <h2 style="text-align: center;">Random basic functions</h2> 
+  <p>Moving forward, other useful functions are:</p> 
+  <ul> 
+   <li><code class="language-python">random.uniform(a, b)</code> – returns a pseudo-random float number in the range between a and b:</li> 
+  </ul> 
+  <pre><code class="language-python">print(random.uniform(3, 100))  # 35.94079523197162</code></pre> 
+  <ul> 
+   <li><strong><code class="language-python">random.randint(a, b)</code> – </strong>returns a pseudo-random integer number in the range between a and b:</li> 
+  </ul> 
+  <pre><code class="language-python">print(random.randint(35, 53))  # 52</code></pre> 
+  <ul> 
+   <li><strong><code class="language-python">random.choice(seq)</code>– </strong>returns pseudo-random element from <em>non-empty</em> sequences:</li> 
+  </ul> 
+  <pre><code class="language-python">print(random.choice('Voldemort'))  # m</code></pre> 
+  <ul> 
+   <li><strong><code class="language-python">random.randrange(a, b, c)</code> – </strong>returns a pseudo-random number from a range between a and b with a step c. Just like with the <code class="language-python">range()</code> function, the <em>start</em> and <em>step</em> arguments may be omitted with the default values 0 and 1 respectively. It means that the function can take one, two, or three parameters:</li> 
+  </ul> 
+  <pre><code class="language-python">print(random.randrange(3, 100, 5))  # 18
+print(random.randrange(1, 5))       # 2
+print(random.randrange(100))        # 44</code></pre> 
+  <ul> 
+   <li><code class="language-python">random.shuffle(seq)</code> – shuffles a sequence. Attention: it doesn't work with immutable datatypes!</li> 
+  </ul> 
+  <pre><code class="language-python">tiny_list = ['a', 'apple', 'b', 'banana', 'c', 'cat']
+random.shuffle(tiny_list)
+print(tiny_list)  # ['apple', 'banana', 'a', 'cat', 'b', 'c']</code></pre> 
+  <ul> 
+   <li><code class="language-python">random.sample(population, k)</code>– returns a pseudo-random k length list from a population sequence. This function is used for random sampling without replacement:</li> 
+  </ul> 
+  <pre><code class="language-python">print(random.sample(range(100), 3))  # [24, 33, 91]</code></pre> 
+  <p>Furthermore, there are plenty of other functions that are used in common mathematical practice, e.g. <code class="language-python">random.gammavariate(alpha, beta)</code><strong> </strong>that is used for gamma distribution or <strong><code class="language-python">random.gauss(mu, sigma)</code> </strong>that returns Gaussian distribution. If you need such narrow-specialized function, you can address the <a target="_blank" href="https://docs.python.org/3/library/random.html" rel="noopener noreferrer nofollow">Python documentation</a>.</p> 
+  <p></p>
+  <div class="alert alert-warning">
+   The pseudo-random generators of the 
+   <code class="language-python">random</code> module should 
+   <em>NOT</em> be used for security purposes. If you are intending to work with passwords, security tokens and other sensitive data, check out the 
+   <a target="_blank" href="https://docs.python.org/3/library/secrets.html" rel="noopener noreferrer nofollow">secrets</a> module. It's considered more reliable since it generates secure random numbers.
+  </div>
+  <p></p> 
+  <h2>Summary</h2> 
+  <p>To sum up, in this topic, we've looked closely at <code class="language-python">random</code> module from a Python standard library and its basic functionality. Now you can use it in your projects yourself!</p>
+ </body>
+</html>
